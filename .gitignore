@@ -1,0 +1,34 @@
+# Python
+backend/venv/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+backend/.env
+
+# Node / React
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Media & data
+media/*
+!media/.gitkeep
+
+# Playwright
+backend/.playwright-profile/
+
+# Logs
+*.log
+
+# Local scratch / test artifacts (curl cookie jars, ad-hoc thumbnail dumps)
+frontend/cookies.txt
+frontend/thumb_*.bin
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+.claude/

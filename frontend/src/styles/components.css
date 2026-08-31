@@ -1,0 +1,194 @@
+/* =========================================================================
+   COMPONENTS — reusable surface/button/badge skins.
+   Ported from the desmondyap theme's btn1..btn6, .general-box, #general-btn,
+   .tb-ac-btn, .tb-status and form rules.
+
+   These are plain classes with no React coupling, so the Back Office and any
+   front-facing page can both use them.
+   ========================================================================= */
+
+/* ---- Surfaces --------------------------------------------------------- */
+.general-box {
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--r-card);
+}
+
+.panel {
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--r-card);
+  padding: 25px 0;
+}
+
+.panel__head {
+  padding: 0 20px 12px;
+  border-bottom: 1px solid var(--c-border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.panel__title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+  color: var(--c-primary);
+}
+
+.panel__body {
+  padding: 18px 20px 0;
+}
+
+.section {
+  padding: 0.5rem 0;
+}
+
+/* ---- Buttons ---------------------------------------------------------- */
+.btn-gen {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 11px 20px;
+  border-radius: var(--r-btn);
+  text-align: center;
+  position: relative;
+  letter-spacing: 1px;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  transition: var(--t-fast);
+  color: #fff;
+  background: var(--c-primary);
+}
+
+.btn-gen i {
+  margin-right: 8px;
+}
+
+.btn-gen:hover {
+  color: #fff;
+  transform: var(--lift);
+}
+
+.btn-gen:disabled,
+.btn-gen.is-disabled {
+  color: #fff;
+  background: var(--c-disabled);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-gen--sm {
+  font-size: var(--fs-xs);
+  padding: 8px 14px;
+  letter-spacing: 0.5px;
+}
+
+/* Variants mirror the theme's btn1..btn5 */
+.btn-gen--primary { background: var(--c-primary); }
+.btn-gen--neutral { color: var(--c-text); background: var(--c-neutral); }
+.btn-gen--neutral:hover { color: var(--c-text); }
+.btn-gen--success { background: var(--c-success); }
+.btn-gen--success:hover { background: var(--c-success-hover); }
+.btn-gen--danger  { background: var(--c-danger); }
+.btn-gen--danger:hover { background: var(--c-danger-hover); }
+.btn-gen--navy    { background: var(--c-navy); }
+.btn-gen--info    { background: var(--c-info); }
+
+/* ---- Square icon action buttons (table rows) -------------------------- */
+.ac-btn {
+  color: #fff;
+  width: 35px;
+  height: 35px;
+  font-size: var(--fs-base);
+  line-height: 1.4;
+  margin-right: 1px;
+  border-radius: var(--r-pill);
+  align-items: center;
+  display: inline-flex;
+  transition: var(--t-base);
+  justify-content: center;
+  background: var(--c-info);
+}
+
+.ac-btn:last-child { margin-right: 0; }
+.ac-btn:hover { color: #fff; transform: var(--lift); }
+
+.ac-btn--edit   { background: var(--c-info); }
+.ac-btn--delete { background: var(--c-danger); }
+.ac-btn--alt    { background: var(--c-pink); }
+.ac-btn--view   { background: var(--c-royal); }
+.ac-btn--muted  { background: var(--c-disabled); cursor: not-allowed; }
+
+/* ---- Status pills ----------------------------------------------------- */
+.pill {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  display: inline-block;
+  color: #fff;
+  background: var(--c-disabled);
+}
+
+.pill--success { background: var(--c-success-solid); }
+.pill--danger  { background: var(--c-danger); }
+.pill--warning { background: var(--c-warning); }
+.pill--info    { background: var(--c-info); }
+.pill--pink    { background: var(--c-pink); }
+.pill--muted   { background: #8f9bb3; }
+
+/* ---- Forms ------------------------------------------------------------ */
+.form-control,
+.form-select {
+  color: var(--c-text) !important;
+  background: transparent;
+  border: 1px solid var(--c-border) !important;
+  font-size: var(--fs-sm);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border: 1px solid var(--c-primary) !important;
+  box-shadow: none;
+}
+
+label {
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+}
+
+.form-check-input:checked {
+  border-color: var(--c-primary);
+  background-color: var(--c-primary);
+}
+
+/* ---- Empty state ------------------------------------------------------ */
+.empty-state {
+  text-align: center;
+  padding: 45px 20px;
+  color: var(--c-text-muted);
+}
+
+.empty-state i {
+  font-size: 40px;
+  color: var(--c-border);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.empty-state p {
+  font-size: var(--fs-sm);
+  margin: 0;
+}
+
+/* ---- Alerts ----------------------------------------------------------- */
+.alert {
+  font-size: var(--fs-sm);
+  border: unset;
+  border-radius: var(--r-btn);
+}

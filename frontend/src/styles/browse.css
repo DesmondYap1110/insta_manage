@@ -1,0 +1,258 @@
+/* =========================================================================
+   BROWSE & SELECT — the grid used to pick which media to download.
+   ========================================================================= */
+
+.browse-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--c-border);
+  margin-bottom: 16px;
+}
+
+.browse-tab {
+  background: transparent;
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding: 9px 16px;
+  border-bottom: 2.5px solid transparent;
+  transition: var(--t-base);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.browse-tab:hover { color: var(--c-primary); }
+
+.browse-tab.is-active {
+  color: var(--c-primary);
+  border-bottom-color: var(--c-primary);
+}
+
+.browse-tab__count {
+  font-size: var(--fs-xs);
+  background: var(--c-neutral);
+  color: var(--c-text-muted);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+
+.browse-tab.is-active .browse-tab__count {
+  background: var(--c-primary);
+  color: #fff;
+}
+
+/* ---- Year chips -------------------------------------------------------- */
+.year-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.year-chips__label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  margin-right: 4px;
+}
+
+.year-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  color: var(--c-text);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  transition: var(--t-base);
+}
+
+.year-chip:hover {
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+
+.year-chip.is-active {
+  color: #fff;
+  background: var(--c-navy);
+  border-color: var(--c-navy);
+}
+
+.year-chip__count {
+  font-size: var(--fs-xs);
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--c-neutral);
+  color: var(--c-text-muted);
+}
+
+.year-chip.is-active .year-chip__count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+/* ---- Sticky selection bar --------------------------------------------- */
+.sel-bar {
+  position: sticky;
+  top: var(--topbar-h);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 11px 14px;
+  margin-bottom: 14px;
+  border-radius: var(--r-btn);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--c-border-subtle);
+}
+
+.sel-bar.is-active {
+  background: linear-gradient(90deg, rgba(24,150,189,.08), rgba(36,236,197,.08));
+  border-color: var(--c-primary);
+}
+
+.sel-bar__count {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.sel-bar__count strong { color: var(--c-primary); }
+
+.sel-bar__hint {
+  font-size: var(--fs-xs);
+  color: var(--c-text-muted);
+}
+
+.sel-bar__spacer { flex: 1; }
+
+/* ---- Grid -------------------------------------------------------------- */
+.sel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.sel-card {
+  cursor: pointer;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-card);
+  border: 2px solid transparent;
+  transition: var(--t-base);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sel-card:hover { transform: translateY(-3px); }
+.sel-card:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+
+.sel-card.is-selected {
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px rgba(24, 150, 189, 0.16);
+}
+
+.sel-card.is-downloaded:not(.is-selected) { opacity: 0.72; }
+
+.sel-card__frame {
+  position: relative;
+  background: var(--c-navy-deep);
+}
+
+.sel-card__thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* Checkbox affordance — always visible so it's obvious tiles are selectable */
+.sel-card__check {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: transparent;
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: var(--t-base);
+}
+
+.sel-card.is-selected .sel-card__check {
+  color: #fff;
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+}
+
+.sel-card__badges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+}
+
+.sel-card__badge {
+  background: rgba(0, 15, 45, 0.75);
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sel-card__saved {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: var(--c-success-solid);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sel-card__body { padding: 9px 11px 11px; }
+
+.sel-card__caption {
+  font-size: var(--fs-sm);
+  margin: 0 0 3px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sel-card__meta {
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+}
+
+@media (max-width: 991px) {
+  .sel-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .sel-bar { position: static; }
+}

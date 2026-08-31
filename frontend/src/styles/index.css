@@ -1,0 +1,16 @@
+/* =========================================================================
+   Design-system barrel. Import order matters: tokens must come first so
+   every later file can reference the custom properties.
+
+   Consumed once in src/main.jsx — both the Back Office shell and any
+   front-facing page get the same system from here.
+   ========================================================================= */
+
+@import './tokens.css';
+@import './base.css';
+@import './layout.css';
+@import './components.css';
+@import './datatable.css';
+@import './media.css';
+@import './browse.css';
+@import './login.css';

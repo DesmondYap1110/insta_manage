@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Instagram Media Manager</string>
+    <string name="title_activity_main">Instagram Media Manager</string>
+    <string name="package_name">com.instamanage.app</string>
+    <string name="custom_url_scheme">com.instamanage.app</string>
+</resources>

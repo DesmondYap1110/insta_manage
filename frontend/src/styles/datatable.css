@@ -1,0 +1,211 @@
+/* =========================================================================
+   DATATABLE — visual port of the desmondyap DataTables setup
+   (assets/css/dataTables.bootstrap5.min.css + the theme's "TABLE SECTION").
+
+   The markup is rendered by <DataTable /> in React rather than jQuery
+   DataTables, but the look, spacing and behaviour (search, page-length,
+   sorting, info line, pagination, export) are deliberately identical.
+   ========================================================================= */
+
+.dt {
+  padding: 0 15px;
+}
+
+/* ---- Toolbar (length menu / export / search) -------------------------- */
+.dt__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.dt__length {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+}
+
+.dt__length select {
+  width: auto;
+  padding: 4px 26px 4px 10px;
+  font-size: var(--fs-sm);
+}
+
+.dt__spacer {
+  flex: 1;
+}
+
+.dt__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+}
+
+.dt__search input {
+  width: 200px;
+  padding: 6px 12px;
+  font-size: var(--fs-sm);
+  border-radius: var(--r-btn);
+}
+
+/* Export buttons — theme's .dt-button styling */
+.dt__export {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.dt-button {
+  color: #fff;
+  background: var(--c-info);
+  border: 1px solid var(--c-info);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  transition: var(--t-base);
+}
+
+.dt-button:hover {
+  color: #fff;
+  border-color: #001c53;
+  background: #001c53;
+}
+
+/* ---- Table ------------------------------------------------------------ */
+.dt__scroll {
+  overflow-x: auto;
+}
+
+.dt table {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--fs-sm);
+}
+
+.dt thead th {
+  color: #fff;
+  background: var(--c-navy);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  padding: 12px 14px;
+  white-space: nowrap;
+  border-color: rgba(255, 255, 255, 0.08);
+  vertical-align: middle;
+}
+
+.dt thead th.is-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.dt thead th.is-sortable:hover {
+  background: #012c80;
+}
+
+.dt__sort-icon {
+  margin-left: 6px;
+  opacity: 0.45;
+  font-size: 11px;
+}
+
+.dt thead th.is-sorted .dt__sort-icon {
+  opacity: 1;
+  color: var(--c-mint);
+}
+
+.dt tbody td {
+  color: var(--c-text);
+  background: var(--c-surface);
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--c-border-subtle);
+}
+
+.dt tbody tr:hover td {
+  background: #f7f9fc;
+}
+
+.dt__empty {
+  text-align: center;
+  color: var(--c-text-muted);
+  padding: 35px 14px !important;
+}
+
+/* ---- Footer (info + pagination) --------------------------------------- */
+.dt__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.dt__info {
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+}
+
+.dt__pagination {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dt__page {
+  color: var(--c-text);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-subtle);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  padding: 6px 12px;
+  min-width: 34px;
+  transition: var(--t-base);
+}
+
+.dt__page:hover:not(:disabled) {
+  color: #fff;
+  background: var(--c-navy);
+  border-color: var(--c-navy);
+}
+
+.dt__page.is-active {
+  color: #fff;
+  background: var(--c-navy);
+  border-color: var(--c-navy);
+}
+
+.dt__page:disabled {
+  color: var(--c-disabled);
+  cursor: not-allowed;
+}
+
+.dt__ellipsis {
+  align-self: center;
+  padding: 0 4px;
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+}
+
+@media (max-width: 991px) {
+  .dt {
+    padding: 0;
+  }
+
+  .dt__search input {
+    width: 100%;
+  }
+
+  .dt__footer {
+    justify-content: flex-start;
+  }
+}

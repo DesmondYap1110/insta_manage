@@ -1,0 +1,48 @@
+/* =========================================================================
+   BASE — global resets, typography and scrollbars.
+   Ported from the desmondyap theme's "GENERAL SECTION".
+   ========================================================================= */
+
+body {
+  font-family: var(--font-sans);
+  background: var(--c-body-bg);
+  color: var(--c-text);
+}
+
+h1, h2, h3, h4, h5, h6,
+span, button, a, li, p {
+  font-family: var(--font-sans);
+}
+
+button {
+  border: unset;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  color: #fff;
+  background: var(--c-primary);
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(0 0 0 / 30%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-primary);
+  border-radius: 10px;
+}
+
+/* Utility text colours matching the theme's helper classes */
+.text-brand { color: var(--c-primary); }
+.text-faint { color: var(--c-text-faint); }
+.text-muted-soft { color: var(--c-text-muted); }

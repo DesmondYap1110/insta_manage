@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Instagram Media Manager — Technical Guide</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+
+  :root {
+    --primary: #1896bd;
+    --mint: #24ecc5;
+    --navy: #012161;
+    --navy-deep: #000f2d;
+    --text: #23272e;
+    --muted: #6b7480;
+    --border: #dde3ea;
+    --bg-soft: #f5f8fb;
+    --danger: #d9342b;
+    --success: #0a8f3c;
+    --warn: #b8720a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--text);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  h1, h2, h3, h4 { line-height: 1.25; margin: 0; }
+
+  h2 {
+    font-size: 17pt;
+    color: var(--navy);
+    border-bottom: 2.5px solid var(--primary);
+    padding-bottom: 5px;
+    margin: 0 0 14px;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12.5pt;
+    color: var(--primary);
+    margin: 20px 0 7px;
+    page-break-after: avoid;
+  }
+
+  h4 {
+    font-size: 10.5pt;
+    color: var(--navy);
+    margin: 14px 0 5px;
+    page-break-after: avoid;
+  }
+
+  p { margin: 0 0 9px; }
+  ul, ol { margin: 0 0 9px; padding-left: 19px; }
+  li { margin-bottom: 3px; }
+
+  code {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 9pt;
+    background: #eef3f8;
+    padding: 1px 4px;
+    border-radius: 2px;
+    color: #0b4a63;
+  }
+
+  pre {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 8.6pt;
+    line-height: 1.45;
+    background: var(--navy-deep);
+    color: #dbe6f0;
+    padding: 10px 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0 0 10px;
+    page-break-inside: avoid;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  pre .c { color: #7f9cb5; }
+  pre .k { color: var(--mint); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 0 0 11px;
+    page-break-inside: avoid;
+  }
+  th {
+    background: var(--navy);
+    color: #fff;
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 600;
+  }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--bg-soft); }
+
+  .cover {
+    height: 250mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    page-break-after: always;
+  }
+  .cover__bar { height: 7px; background: linear-gradient(90deg, var(--primary), var(--mint)); margin-bottom: 26px; }
+  .cover h1 { font-size: 30pt; color: var(--navy); margin-bottom: 6px; }
+  .cover .sub { font-size: 14pt; color: var(--primary); margin-bottom: 26px; }
+  .cover .meta { font-size: 10pt; color: var(--muted); }
+  .cover .meta b { color: var(--text); }
+  .cover .stack { margin-top: 22px; font-size: 9.5pt; }
+  .cover .stack span {
+    display: inline-block; padding: 3px 9px; margin: 0 5px 6px 0;
+    background: var(--bg-soft); border: 1px solid var(--border); border-radius: 20px;
+  }
+
+  .section { page-break-before: always; }
+
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc ol { padding-left: 18px; }
+  .toc > ol > li { margin-bottom: 6px; font-weight: 600; }
+  .toc ol ol { padding-left: 16px; margin-top: 3px; }
+  .toc ol ol li { font-weight: 400; color: var(--muted); }
+
+  .callout {
+    border-left: 3.5px solid var(--primary);
+    background: var(--bg-soft);
+    padding: 9px 12px;
+    margin: 0 0 11px;
+    page-break-inside: avoid;
+    font-size: 9.5pt;
+  }
+  .callout--warn { border-left-color: var(--warn); background: #fff8ec; }
+  .callout--danger { border-left-color: var(--danger); background: #fdf1f0; }
+  .callout--ok { border-left-color: var(--success); background: #f0f9f3; }
+  .callout b { display: block; margin-bottom: 2px; }
+
+  figure { margin: 0 0 14px; page-break-inside: avoid; text-align: center; }
+  figcaption { font-size: 8.5pt; color: var(--muted); margin-top: 5px; font-style: italic; }
+  svg { max-width: 100%; height: auto; }
+
+  .pill {
+    display: inline-block; padding: 1px 7px; border-radius: 3px;
+    font-size: 8pt; font-weight: 600; color: #fff;
+  }
+  .pill--get { background: var(--success); }
+  .pill--post { background: var(--primary); }
+  .pill--del { background: var(--danger); }
+
+  .two-col { display: flex; gap: 14px; }
+  .two-col > * { flex: 1; }
+
+  .swatch {
+    display: inline-block; width: 11px; height: 11px;
+    border-radius: 2px; vertical-align: -1px; margin-right: 5px;
+    border: 1px solid rgba(0,0,0,.15);
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="cover__bar"></div>
+  <h1>Instagram Media Manager</h1>
+  <div class="sub">Technical Guide — Architecture, Design, Pipelines &amp; Debugging</div>
+  <div class="meta">
+    <p><b>Project root:</b> <code>C:\laragon\www\insta_manage</code></p>
+    <p><b>Audience:</b> the developer maintaining and operating this application</p>
+    <p><b>Scope:</b> local, single-user, self-hosted tool</p>
+  </div>
+  <div class="stack">
+    <span>Python 3.10</span><span>FastAPI</span><span>SQLAlchemy 2</span><span>MySQL 8</span>
+    <span>Celery</span><span>Redis</span><span>Instaloader</span><span>Playwright</span>
+    <span>React 18</span><span>Vite 4</span><span>Bootstrap 5</span>
+  </div>
+</div>
+
+<!-- ================= TOC ================= -->
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li>Architecture
+      <ol>
+        <li>Runtime topology — the five processes</li>
+        <li>Backend layering (and how it maps to MVC)</li>
+        <li>Request lifecycle</li>
+        <li>Database schema</li>
+        <li>The two independent auth systems</li>
+      </ol>
+    </li>
+    <li>Design System
+      <ol>
+        <li>Where it came from</li>
+        <li>Token architecture &amp; CSS layer order</li>
+        <li>Colour palette</li>
+        <li>Component inventory</li>
+        <li>The DataTable component</li>
+      </ol>
+    </li>
+    <li>Pipelines
+      <ol>
+        <li>Instagram login pipeline</li>
+        <li>Download job pipeline</li>
+        <li>Media-type resolution</li>
+        <li>Storage layout &amp; metadata capture</li>
+      </ol>
+    </li>
+    <li>Debugging Guide
+      <ol>
+        <li>Service health checklist</li>
+        <li>Where the logs are</li>
+        <li>Failure catalogue — symptom → cause → fix</li>
+        <li>Inspecting state with SQL</li>
+        <li>Testing the API directly</li>
+        <li>Frontend debugging (incl. headless screenshots)</li>
+        <li>Case studies: three real bugs</li>
+        <li>Reset procedures</li>
+      </ol>
+    </li>
+    <li>Appendix — Command Reference</li>
+  </ol>
+</div>
+
+<!-- ================= 1. ARCHITECTURE ================= -->
+<div class="section">
+<h2>1. Architecture</h2>
+
+<h3>1.1 Runtime topology — the five processes</h3>
+<p>The application is not a single program. Five processes must be running; four of them are long-lived services and one is the dev server for the UI. Most "nothing happens when I click download" reports trace back to one of these being down.</p>
+
+<figure>
+<svg viewBox="0 0 760 310" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="11">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#5b6b7d"/>
+    </marker>
+  </defs>
+
+  <rect x="14" y="16" width="150" height="62" rx="5" fill="#e8f4f9" stroke="#1896bd" stroke-width="1.5"/>
+  <text x="89" y="40" text-anchor="middle" font-weight="600" fill="#012161">Browser</text>
+  <text x="89" y="57" text-anchor="middle" font-size="9" fill="#6b7480">localhost:5173</text>
+
+  <rect x="14" y="120" width="150" height="70" rx="5" fill="#fff" stroke="#94a4b5"/>
+  <text x="89" y="143" text-anchor="middle" font-weight="600" fill="#012161">Vite dev server</text>
+  <text x="89" y="159" text-anchor="middle" font-size="9" fill="#6b7480">React SPA + proxy</text>
+  <text x="89" y="174" text-anchor="middle" font-size="8.5" fill="#6b7480">:5173 → :8000</text>
+
+  <rect x="250" y="120" width="160" height="70" rx="5" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <text x="330" y="143" text-anchor="middle" font-weight="600" fill="#012161">FastAPI (uvicorn)</text>
+  <text x="330" y="159" text-anchor="middle" font-size="9" fill="#6b7480">REST API + /files</text>
+  <text x="330" y="174" text-anchor="middle" font-size="8.5" fill="#6b7480">:8000</text>
+
+  <rect x="250" y="16" width="160" height="62" rx="5" fill="#fff" stroke="#94a4b5"/>
+  <text x="330" y="40" text-anchor="middle" font-weight="600" fill="#012161">Celery worker</text>
+  <text x="330" y="57" text-anchor="middle" font-size="8.5" fill="#6b7480">--pool=solo (Windows)</text>
+
+  <rect x="480" y="16" width="120" height="62" rx="5" fill="#fdf1f0" stroke="#d9342b"/>
+  <text x="540" y="40" text-anchor="middle" font-weight="600" fill="#012161">Redis</text>
+  <text x="540" y="57" text-anchor="middle" font-size="8.5" fill="#6b7480">:6379 broker</text>
+
+  <rect x="480" y="120" width="120" height="70" rx="5" fill="#f0f9f3" stroke="#0a8f3c"/>
+  <text x="540" y="146" text-anchor="middle" font-weight="600" fill="#012161">MySQL</text>
+  <text x="540" y="163" text-anchor="middle" font-size="8.5" fill="#6b7480">:3306</text>
+
+  <rect x="480" y="228" width="120" height="62" rx="5" fill="#f5f8fb" stroke="#94a4b5"/>
+  <text x="540" y="252" text-anchor="middle" font-weight="600" fill="#012161">media/</text>
+  <text x="540" y="269" text-anchor="middle" font-size="8.5" fill="#6b7480">files on disk</text>
+
+  <rect x="640" y="16" width="105" height="62" rx="5" fill="#fff8ec" stroke="#b8720a"/>
+  <text x="692" y="34" text-anchor="middle" font-weight="600" fill="#012161">Instagram</text>
+  <text x="692" y="50" text-anchor="middle" font-size="8.5" fill="#6b7480">graphql +</text>
+  <text x="692" y="63" text-anchor="middle" font-size="8.5" fill="#6b7480">CDN</text>
+
+  <line x1="89" y1="78" x2="89" y2="118" stroke="#5b6b7d" marker-end="url(#ar)"/>
+  <line x1="164" y1="155" x2="248" y2="155" stroke="#5b6b7d" marker-end="url(#ar)"/>
+  <line x1="410" y1="145" x2="478" y2="145" stroke="#5b6b7d" marker-end="url(#ar)"/>
+  <line x1="410" y1="47" x2="478" y2="47" stroke="#5b6b7d" marker-end="url(#ar)"/>
+  <line x1="330" y1="118" x2="330" y2="80" stroke="#5b6b7d" marker-end="url(#ar)"/>
+  <text x="336" y="103" font-size="8" fill="#6b7480">enqueue</text>
+  <line x1="410" y1="62" x2="478" y2="140" stroke="#5b6b7d" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+  <line x1="600" y1="47" x2="638" y2="47" stroke="#5b6b7d" marker-end="url(#ar)"/>
+  <line x1="560" y1="190" x2="560" y2="226" stroke="#5b6b7d" stroke-dasharray="3 2" marker-end="url(#ar)"/>
+  <text x="120" y="212" font-size="8.5" fill="#6b7480">Vite proxies /api and /files so the</text>
+  <text x="120" y="225" font-size="8.5" fill="#6b7480">browser sees ONE origin (:5173).</text>
+  <text x="120" y="238" font-size="8.5" fill="#6b7480">That is why the session cookie works.</text>
+</svg>
+<figcaption>Figure 1 — Runtime topology. Dashed lines are writes performed by the Celery worker.</figcaption>
+</figure>
+
+<table>
+  <tr><th style="width:22%">Process</th><th style="width:26%">Start command</th><th>If it is down</th></tr>
+  <tr><td>MySQL</td><td>Laragon, or <code>mysqld.exe</code></td><td>Backend fails on startup / every request 500s</td></tr>
+  <tr><td>Redis</td><td><code>redis-server.exe --port 6379</code></td><td>API still works; <b>jobs never start</b> (stay <code>pending</code>)</td></tr>
+  <tr><td>Celery worker</td><td><code>celery -A app.tasks.celery_app worker --pool=solo</code></td><td>Jobs queue up but never execute</td></tr>
+  <tr><td>FastAPI</td><td><code>uvicorn app.main:app --reload</code></td><td>UI loads but every call fails</td></tr>
+  <tr><td>Vite</td><td><code>npm run dev</code></td><td>No UI at all</td></tr>
+</table>
+
+<div class="callout callout--warn">
+  <b>Windows-specific</b>
+  Celery's default <code>prefork</code> pool does not work on Windows. <code>--pool=solo</code> is mandatory — without it the worker starts, connects, prints "ready", and then silently never executes a task.
+</div>
+
+<h3>1.2 Backend layering (and how it maps to MVC)</h3>
+<p>The backend is a layered architecture. It borrows from MVC but is not textbook MVC, because the server renders no HTML — the "view" is a separate React app consuming JSON.</p>
+
+<table>
+  <tr><th style="width:24%">Layer</th><th style="width:26%">Directory</th><th>Responsibility</th></tr>
+  <tr><td>Model</td><td><code>app/models/</code></td><td>SQLAlchemy ORM classes — the actual tables. <i>Same role as MVC's Model.</i></td></tr>
+  <tr><td>Controller</td><td><code>app/routers/</code></td><td>HTTP endpoints. Parse/validate, call a service, shape the response. Deliberately thin.</td></tr>
+  <tr><td>View</td><td><i>(none server-side)</i></td><td>Replaced by the React SPA. This is the main divergence from classic MVC.</td></tr>
+  <tr><td>Service</td><td><code>app/services/</code></td><td>Business logic: Instagram access, Playwright login, crypto, password hashing. Not an MVC concept — added so controllers stay thin and logic is reusable from Celery tasks.</td></tr>
+  <tr><td>Schema (DTO)</td><td><code>app/schemas/</code></td><td>Pydantic request/response contracts. Gives automatic validation and the OpenAPI docs.</td></tr>
+  <tr><td>Task</td><td><code>app/tasks/</code></td><td>Celery entry points. Own transaction + job-status bookkeeping.</td></tr>
+</table>
+
+<div class="callout">
+  <b>Why services exist as their own layer</b>
+  <code>download_posts()</code> is called from a Celery task, never from a router. If that logic lived in the router it would be unreachable from the worker. Keeping it in <code>services/</code> means the same function serves both entry points.
+</div>
+
+<h3>1.3 Request lifecycle</h3>
+<pre><span class="c"># Example: POST /api/downloads/jobs</span>
+Browser  ──▶ Vite proxy ──▶ FastAPI
+                              │
+                              ├─ CORS middleware
+                              ├─ protect_media_files middleware   <span class="c"># only /files/*</span>
+                              ├─ Depends(get_current_admin)       <span class="c"># reads httpOnly cookie</span>
+                              ├─ Pydantic validates DownloadJobCreate
+                              ├─ router: downloads.create_job()
+                              │     ├─ INSERT download_jobs (status=pending)
+                              │     └─ task.delay(job.id) ─────▶ Redis
+                              └─ 201 + DownloadJobRead
+
+Celery worker ◀── Redis
+      ├─ _run_job(): status=running, started_at=now
+      ├─ get_authenticated_loader(db)   <span class="c"># decrypt IG cookies</span>
+      ├─ instaloader_service.download_*()
+      └─ status=success|failed, finished_at=now</pre>
+
+<h3>1.4 Database schema</h3>
+<figure>
+<svg viewBox="0 0 740 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10">
+  <rect x="10" y="14" width="160" height="76" rx="4" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <rect x="10" y="14" width="160" height="20" rx="4" fill="#012161"/>
+  <text x="90" y="28" text-anchor="middle" fill="#fff" font-weight="600" font-size="9.5">admin_users</text>
+  <text x="18" y="48" font-size="8.5">id · username</text>
+  <text x="18" y="62" font-size="8.5">password_hash (bcrypt)</text>
+  <text x="18" y="76" font-size="8.5">is_active · last_login_at</text>
+
+  <rect x="10" y="112" width="160" height="76" rx="4" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <rect x="10" y="112" width="160" height="20" rx="4" fill="#012161"/>
+  <text x="90" y="126" text-anchor="middle" fill="#fff" font-weight="600" font-size="9.5">instagram_sessions</text>
+  <text x="18" y="146" font-size="8.5">ig_username</text>
+  <text x="18" y="160" font-size="8.5">encrypted_session_blob</text>
+  <text x="18" y="174" font-size="8.5">user_agent · is_active</text>
+
+  <rect x="250" y="122" width="170" height="92" rx="4" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <rect x="250" y="122" width="170" height="20" rx="4" fill="#012161"/>
+  <text x="335" y="136" text-anchor="middle" fill="#fff" font-weight="600" font-size="9.5">tracked_accounts</text>
+  <text x="258" y="156" font-size="8.5">id · username (unique)</text>
+  <text x="258" y="170" font-size="8.5">full_name · biography</text>
+  <text x="258" y="184" font-size="8.5">followers/following/posts</text>
+  <text x="258" y="198" font-size="8.5">is_private · last_synced_at</text>
+
+  <rect x="500" y="8" width="230" height="108" rx="4" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <rect x="500" y="8" width="230" height="20" rx="4" fill="#012161"/>
+  <text x="615" y="22" text-anchor="middle" fill="#fff" font-weight="600" font-size="9.5">media_items</text>
+  <text x="508" y="42" font-size="8.5">account_id FK · media_type</text>
+  <text x="508" y="56" font-size="8.5">instagram_media_id · shortcode</text>
+  <text x="508" y="70" font-size="8.5">caption · taken_at · file_path</text>
+  <text x="508" y="84" font-size="8.5">width/height · file_size · source_url</text>
+  <text x="508" y="98" font-size="8.5">carousel_group_id (shortcode of parent post)</text>
+  <text x="508" y="110" font-size="7.5" fill="#d9342b">UNIQUE(account_id, instagram_media_id)</text>
+
+  <rect x="500" y="136" width="230" height="76" rx="4" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <rect x="500" y="136" width="230" height="20" rx="4" fill="#012161"/>
+  <text x="615" y="150" text-anchor="middle" fill="#fff" font-weight="600" font-size="9.5">download_jobs</text>
+  <text x="508" y="170" font-size="8.5">account_id FK · celery_task_id</text>
+  <text x="508" y="184" font-size="8.5">job_type · status · progress</text>
+  <text x="508" y="198" font-size="8.5">error_message · timestamps</text>
+
+  <rect x="500" y="228" width="230" height="104" rx="4" fill="#fff" stroke="#1896bd" stroke-width="1.5"/>
+  <rect x="500" y="228" width="230" height="20" rx="4" fill="#012161"/>
+  <text x="615" y="242" text-anchor="middle" fill="#fff" font-weight="600" font-size="9.5">discovered_media</text>
+  <text x="508" y="262" font-size="8.5">account_id FK · media_kind</text>
+  <text x="508" y="276" font-size="8.5">instagram_media_id · shortcode</text>
+  <text x="508" y="290" font-size="8.5">is_video · is_carousel · item_count</text>
+  <text x="508" y="304" font-size="8.5">caption · taken_at · thumbnail_path</text>
+  <text x="508" y="317" font-size="7.5" fill="#d9342b">UNIQUE(account_id, instagram_media_id)</text>
+
+  <line x1="420" y1="150" x2="498" y2="62" stroke="#5b6b7d"/>
+  <text x="440" y="100" font-size="8" fill="#6b7480">1..n</text>
+  <line x1="420" y1="168" x2="498" y2="174" stroke="#5b6b7d"/>
+  <text x="440" y="182" font-size="8" fill="#6b7480">1..n</text>
+  <line x1="420" y1="190" x2="498" y2="280" stroke="#5b6b7d"/>
+  <text x="440" y="248" font-size="8" fill="#6b7480">1..n</text>
+</svg>
+<figcaption>Figure 2 — Schema. All three child tables cascade-delete with their account. discovered_media holds listings only (no media bytes) — see &sect;3.4.</figcaption>
+</figure>
+
+<div class="callout callout--ok">
+  <b>The idempotency key</b>
+  <code>UNIQUE(account_id, instagram_media_id)</code> is what makes re-running a download safe — on both <code>media_items</code> and <code>discovered_media</code>. Carousel children get a synthetic id of <code>{mediaid}_{index}</code> so each slide is tracked separately, and share the parent post's shortcode as <code>carousel_group_id</code> so the UI can group them back together.
+</div>
+
+<h3>1.5 The two independent auth systems</h3>
+<p>These are frequently confused. They are unrelated and fail differently.</p>
+<table>
+  <tr><th style="width:18%"></th><th style="width:41%">Back-office session</th><th>Instagram session</th></tr>
+  <tr><td><b>Protects</b></td><td>This application</td><td>Nothing — it <i>grants</i> access to Instagram</td></tr>
+  <tr><td><b>Stored in</b></td><td><code>admin_users</code> (bcrypt hash)</td><td><code>instagram_sessions</code> (Fernet-encrypted cookies)</td></tr>
+  <tr><td><b>Transport</b></td><td>httpOnly signed cookie <code>imm_session</code></td><td>Server-side only; never sent to the browser</td></tr>
+  <tr><td><b>Failure looks like</b></td><td>Login screen appears; <code>401</code> on every route</td><td><code>"No active Instagram session"</code> in a job's error column</td></tr>
+  <tr><td><b>Fix</b></td><td>Sign in, or re-run <code>scripts.create_admin</code></td><td>Re-run the browser login flow</td></tr>
+</table>
+</div>
+
+<!-- ================= 2. DESIGN ================= -->
+<div class="section">
+<h2>2. Design System</h2>
+
+<h3>2.1 Where it came from</h3>
+<p>The visual language was ported from the <code>desmondyap</code> admin theme (<code>C:\laragon\www\desmondyap\adm</code>) — specifically <code>dashboard/inc/color-dark-theme.php</code> and <code>inc/header-cons.php</code>. The source is PHP + jQuery, so files could not be copied verbatim; the <i>design decisions</i> were re-expressed as CSS custom properties and React components.</p>
+
+<table>
+  <tr><th style="width:42%">Source (desmondyap)</th><th>Destination (this app)</th></tr>
+  <tr><td>Hard-coded hex values across PHP includes</td><td><code>styles/tokens.css</code> — CSS variables</td></tr>
+  <tr><td><code>.sidebar-d</code>, <code>#sb-active</code>, <code>#bc-div</code></td><td><code>styles/layout.css</code> + <code>components/layout/</code></td></tr>
+  <tr><td><code>.btn1</code>…<code>.btn6</code>, <code>#general-btn</code></td><td><code>.btn-gen</code> + <code>--primary/--success/--danger/--navy/--info</code></td></tr>
+  <tr><td><code>.tb-ac-btn</code>, <code>.tb-status</code>, <code>.general-box</code></td><td><code>.ac-btn</code>, <code>.pill</code>, <code>.panel</code></td></tr>
+  <tr><td>jQuery DataTables + 10 JS files</td><td><code>components/datatable/DataTable.jsx</code></td></tr>
+  <tr><td><code>icons.css</code> (678 KB, 5 icon sets)</td><td>npm <code>remixicon</code> (1 set, versioned)</td></tr>
+</table>
+
+<div class="callout">
+  <b>Why DataTables was rewritten rather than imported</b>
+  jQuery DataTables takes ownership of the DOM it renders. React also owns that DOM and re-renders rows whenever state changes. The two fight, and rows detach or duplicate. The React port keeps the identical look and features (search, page-length, sorting, info line, pagination, CSV/print) without the conflict.
+</div>
+
+<h3>2.2 Token architecture &amp; CSS layer order</h3>
+<p>Everything visual resolves to <code>styles/tokens.css</code>. No component file contains a raw hex colour. Import order matters and is fixed in <code>styles/index.css</code>:</p>
+<pre>tokens.css      <span class="c">← variables — must be first</span>
+base.css        <span class="c">← resets, typography, scrollbars</span>
+layout.css      <span class="c">← sidebar / topbar / breadcrumb shell</span>
+components.css  <span class="c">← buttons, panels, pills, forms</span>
+datatable.css   <span class="c">← table, toolbar, pagination</span>
+media.css       <span class="c">← gallery grid, thumbnails, modal</span>
+login.css       <span class="c">← the sign-in gate</span></pre>
+<p>Consequence: re-theming the entire application — back office and any future front-facing page — is a single-file edit.</p>
+
+<h3>2.3 Colour palette</h3>
+<table>
+  <tr><th style="width:24%">Token</th><th style="width:18%">Value</th><th>Applied to</th></tr>
+  <tr><td><code>--c-primary</code></td><td><span class="swatch" style="background:#1896bd"></span>#1896bd</td><td>Buttons, links, panel titles, focus rings</td></tr>
+  <tr><td><code>--c-mint</code></td><td><span class="swatch" style="background:#24ecc5"></span>#24ecc5</td><td>Gradient terminus, active sort arrow</td></tr>
+  <tr><td><code>--grad-primary</code></td><td>58° teal→mint</td><td>Active sidebar item, avatars, login header</td></tr>
+  <tr><td><code>--c-navy-deep</code></td><td><span class="swatch" style="background:#000f2d"></span>#000f2d</td><td>Sidebar background</td></tr>
+  <tr><td><code>--c-navy</code></td><td><span class="swatch" style="background:#012161"></span>#012161</td><td>Table headers, active pagination</td></tr>
+  <tr><td><code>--c-body-bg</code></td><td><span class="swatch" style="background:#eaedf7"></span>#eaedf7</td><td>Page background</td></tr>
+  <tr><td><code>--c-success</code></td><td><span class="swatch" style="background:#06d736"></span>#06d736</td><td>Public badge, success pill</td></tr>
+  <tr><td><code>--c-danger</code></td><td><span class="swatch" style="background:#ff4d4d"></span>#ff4d4d</td><td>Delete buttons, failed jobs, errors</td></tr>
+  <tr><td><code>--c-info</code></td><td><span class="swatch" style="background:#00b7ff"></span>#00b7ff</td><td>Export buttons, edit action, running jobs</td></tr>
+  <tr><td><code>--c-warning</code></td><td><span class="swatch" style="background:#e18d00"></span>#e18d00</td><td>Private badge</td></tr>
+  <tr><td><code>--shadow-card</code></td><td>0 10px 30px /5%</td><td>Every raised surface</td></tr>
+  <tr><td><code>--lift</code></td><td>translateY(-5px)</td><td>Signature hover on buttons &amp; cards</td></tr>
+</table>
+
+<h3>2.4 Component inventory</h3>
+<pre>components/
+├── layout/     AppLayout  <span class="c">shell + mobile drawer state</span>
+│               Sidebar    <span class="c">nav defined as DATA, not JSX</span>
+│               Topbar     <span class="c">IG status + admin identity/logout</span>
+│               Breadcrumb <span class="c">trail=[{label,to}]</span>
+├── ui/         Panel · StatusPill · EmptyState · ConfirmModal
+├── datatable/  DataTable
+└── media/      MediaCard · MediaModal</pre>
+<p>Adding a nav item is one line in <code>NAV_SECTIONS</code> inside <code>Sidebar.jsx</code>; no JSX edit required.</p>
+
+<h3>2.5 The DataTable component</h3>
+<pre>&lt;DataTable
+  columns={[
+    { key: 'username', header: 'Account', sortable: true,
+      value: (r) =&gt; `${r.username} ${r.full_name || ''}`,   <span class="c">// search/sort/export text</span>
+      render: (r) =&gt; &lt;AccountCell row={r} /&gt; },              <span class="c">// what is displayed</span>
+    { key: 'action', header: 'Action', searchable: false,
+      render: (r) =&gt; &lt;ActionButtons row={r} /&gt; },
+  ]}
+  rows={accounts}
+  exportable
+  exportFilename="tracked-accounts"
+  defaultPageSize={10}
+/&gt;</pre>
+
+<table>
+  <tr><th style="width:22%">Column key</th><th>Meaning</th></tr>
+  <tr><td><code>render(row,i)</code></td><td>JSX shown in the cell. <code>i</code> is the absolute index in the sorted set, so row numbers stay correct across pages.</td></tr>
+  <tr><td><code>value(row)</code></td><td>Plain text used for sorting, searching and export. <b>Required whenever <code>render</code> shows more than one field</b>, otherwise search silently ignores the extra text.</td></tr>
+  <tr><td><code>sortable</code></td><td>Enables click-to-sort. Numeric values compare numerically; strings use <code>localeCompare</code> with <code>numeric:true</code>.</td></tr>
+  <tr><td><code>searchable:false</code></td><td>Excludes the column from the search filter (row numbers, action buttons).</td></tr>
+</table>
+
+<div class="callout callout--warn">
+  <b>The most likely DataTable mistake</b>
+  Omitting <code>value</code> on a composite cell. The column renders fine, but searching for text that is visibly on screen returns nothing — because the filter only saw <code>row[key]</code>. This exact bug shipped and was caught in testing (see §4.7).
+</div>
+</div>
+
+<!-- ================= 3. PIPELINES ================= -->
+<div class="section">
+<h2>3. Pipelines</h2>
+
+<h3>3.1 Instagram login pipeline</h3>
+<p>Design constraint: <b>the application must never receive the Instagram password.</b> This is achieved by not building a password field at all — a real browser is opened on Instagram's own login page and only the resulting cookies are harvested.</p>
+
+<figure>
+<svg viewBox="0 0 730 260" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="9.5">
+  <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#5b6b7d"/></marker></defs>
+
+  <rect x="10" y="14" width="118" height="34" rx="4" fill="#e8f4f9" stroke="#1896bd"/>
+  <text x="69" y="35" text-anchor="middle" font-weight="600">React UI</text>
+
+  <rect x="180" y="14" width="128" height="34" rx="4" fill="#fff" stroke="#94a4b5"/>
+  <text x="244" y="35" text-anchor="middle" font-weight="600">POST /login</text>
+
+  <rect x="360" y="14" width="150" height="34" rx="4" fill="#fff" stroke="#94a4b5"/>
+  <text x="435" y="28" text-anchor="middle" font-weight="600" font-size="9">LoginSessionManager</text>
+  <text x="435" y="41" text-anchor="middle" font-size="8" fill="#6b7480">background thread</text>
+
+  <rect x="555" y="14" width="160" height="34" rx="4" fill="#fff8ec" stroke="#b8720a"/>
+  <text x="635" y="28" text-anchor="middle" font-weight="600" font-size="9">Headed Chromium</text>
+  <text x="635" y="41" text-anchor="middle" font-size="8" fill="#6b7480">instagram.com/login</text>
+
+  <rect x="555" y="82" width="160" height="46" rx="4" fill="#fdf1f0" stroke="#d9342b"/>
+  <text x="635" y="100" text-anchor="middle" font-weight="600" font-size="9">USER types password</text>
+  <text x="635" y="114" text-anchor="middle" font-size="8" fill="#6b7480">+ completes 2FA here</text>
+
+  <rect x="360" y="150" width="150" height="44" rx="4" fill="#fff" stroke="#94a4b5"/>
+  <text x="435" y="168" text-anchor="middle" font-size="9">poll every 1.5s for</text>
+  <text x="435" y="182" text-anchor="middle" font-size="9">sessionid + ds_user_id</text>
+
+  <rect x="360" y="212" width="150" height="38" rx="4" fill="#f0f9f3" stroke="#0a8f3c"/>
+  <text x="435" y="228" text-anchor="middle" font-size="9">Fernet-encrypt cookies</text>
+  <text x="435" y="241" text-anchor="middle" font-size="9">→ instagram_sessions</text>
+
+  <rect x="150" y="150" width="150" height="44" rx="4" fill="#e8f4f9" stroke="#1896bd"/>
+  <text x="225" y="168" text-anchor="middle" font-size="9">UI polls /status</text>
+  <text x="225" y="182" text-anchor="middle" font-size="9">every 2s</text>
+
+  <line x1="128" y1="31" x2="178" y2="31" stroke="#5b6b7d" marker-end="url(#ar2)"/>
+  <line x1="308" y1="31" x2="358" y2="31" stroke="#5b6b7d" marker-end="url(#ar2)"/>
+  <line x1="510" y1="31" x2="553" y2="31" stroke="#5b6b7d" marker-end="url(#ar2)"/>
+  <line x1="635" y1="48" x2="635" y2="80" stroke="#5b6b7d" marker-end="url(#ar2)"/>
+  <line x1="635" y1="128" x2="510" y2="168" stroke="#5b6b7d" marker-end="url(#ar2)"/>
+  <line x1="435" y1="194" x2="435" y2="210" stroke="#5b6b7d" marker-end="url(#ar2)"/>
+  <line x1="358" y1="172" x2="302" y2="172" stroke="#5b6b7d" stroke-dasharray="3 2" marker-end="url(#ar2)"/>
+</svg>
+<figcaption>Figure 3 — Login pipeline. The password exists only inside the Chromium window, on Instagram's own page.</figcaption>
+</figure>
+
+<p>Implementation notes worth knowing when debugging:</p>
+<ul>
+  <li>It runs in a <b>plain Python thread</b>, not Celery — it needs a live desktop window and 1.5-second polling, which a distributed worker cannot provide.</li>
+  <li>Success is detected by the presence of both <code>sessionid</code> and <code>ds_user_id</code> cookies — not by URL matching, which is brittle across Instagram's redirect variants.</li>
+  <li>The captured User-Agent is stored <i>alongside</i> the cookies and replayed on every later request. Mismatching the UA is a common cause of instant session invalidation.</li>
+  <li>Timeout is <code>LOGIN_TIMEOUT_SECONDS</code> (default 300). Closing the window early yields status <code>closed</code>, not <code>failed</code>.</li>
+  <li>Terminal states: <code>connected</code> · <code>failed</code> · <code>timed_out</code> · <code>closed</code>. The manager's state lives in memory, so a backend restart mid-login abandons the attempt.</li>
+</ul>
+
+<h3>3.2 Download job pipeline</h3>
+<pre>POST /api/downloads/jobs
+   └─ INSERT download_jobs (status=pending, progress 0/0)
+   └─ task.delay(job_id) ──▶ Redis ──▶ Celery worker
+                                          │
+      _run_job(job_id, action) ───────────┘
+        ├─ status = running, started_at = now()
+        ├─ get_authenticated_loader(db)
+        │     ├─ SELECT active instagram_sessions
+        │     ├─ Fernet-decrypt cookie blob
+        │     ├─ rebuild requests.Session (cookies + stored UA)
+        │     └─ loader.test_login()  <span class="c"># raises if session died</span>
+        ├─ action(db, loader, account, progress_cb)
+        │     └─ per item:  resolve URL → context.get_raw() → write bytes
+        │                   → probe dimensions → UPSERT media_items
+        │                   → progress_cb(i, total) → COMMIT
+        │                   → sleep(DOWNLOAD_REQUEST_DELAY_SECONDS)
+        └─ status = success | failed(+error_message), finished_at = now()</pre>
+
+<table>
+  <tr><th style="width:26%">Job type</th><th>What it iterates</th></tr>
+  <tr><td><code>sync_profile</code></td><td>Profile metadata + avatar only. Cheapest; use it to test connectivity.</td></tr>
+  <tr><td><code>download_posts</code></td><td><code>profile.get_posts()</code> — every post, expanding carousels</td></tr>
+  <tr><td><code>download_reels</code></td><td>Same, filtered by <code>_is_reel()</code></td></tr>
+  <tr><td><code>download_stories</code></td><td><code>get_stories()</code> → <code>story.get_items()</code> (24h window only)</td></tr>
+  <tr><td><code>download_single_post</code></td><td>One shortcode. Best first end-to-end test.</td></tr>
+</table>
+
+<div class="callout">
+  <b>Why <code>context.get_raw()</code> rather than plain <code>requests</code></b>
+  It reuses Instaloader's authenticated session <i>and</i> its retry/back-off handling, so the download inherits polite behaviour toward Instagram's rate limits instead of reimplementing it badly.
+</div>
+
+<h3>3.3 Media-type resolution</h3>
+<p>A single Instagram post can produce one row or twelve. The branching in <code>_post_to_pending()</code>:</p>
+<pre>if post.typename == 'GraphSidecar':      <span class="c"># carousel</span>
+    for i, node in enumerate(post.get_sidecar_nodes()):
+        type = CAROUSEL_VIDEO if node.is_video else CAROUSEL_IMAGE
+        id   = f'{post.mediaid}_{i}'      <span class="c"># synthetic per-slide id</span>
+        url  = node.video_url if node.is_video else node.display_url
+elif post.is_video:
+    type = REEL if _is_reel(post) else POST_VIDEO
+    url  = post.video_url
+else:
+    type = POST_IMAGE
+    url  = post.url</pre>
+
+<div class="callout callout--warn">
+  <b>Known limitation — reel detection</b>
+  Instaloader's <code>Post</code> class exposes no <code>product_type</code> property, and Instagram's timeline GraphQL response does not reliably include one. <code>_is_reel()</code> reads <code>post._node.get('product_type') == 'clips'</code> when present and otherwise classifies the item as <code>post_video</code>. <b>"Download Reels" may therefore under-count.</b> If reels appear missing, this is the first place to look — not the network layer.
+</div>
+
+<h3>3.4 Storage layout &amp; metadata capture</h3>
+<pre>media/
+└── {username}/
+    ├── profile_pic.jpg
+    ├── post_image/     20240115_142233_CxYz123AbCd.jpg
+    ├── carousel_image/ 20240115_142233_CxYz123AbCd.jpg
+    ├── reel/
+    └── story_video/</pre>
+<p>Filename pattern: <code>{taken_at:%Y%m%d_%H%M%S}_{shortcode|media_id}.{ext}</code>. The extension is derived from the HTTP <code>Content-Type</code>, falling back to the URL suffix.</p>
+<p><b>Files are written byte-for-byte as served.</b> Pillow is used only to <i>read</i> width/height from the in-memory buffer — the image is never re-encoded or resized. Captured per item: media type, Instagram media id, shortcode, caption, <code>taken_at</code>, download timestamp, path, extension, resolution, byte size, and source URL.</p>
+</div>
+
+<!-- ================= 4. DEBUGGING ================= -->
+<div class="section">
+<h2>4. Debugging Guide</h2>
+
+<h3>4.1 Service health checklist</h3>
+<p>Run this first, every time. It isolates the failing layer in about ten seconds.</p>
+<pre><span class="c"># 1. MySQL</span>
+C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin\mysqladmin.exe -u root ping
+<span class="c">#    → "mysqld is alive"</span>
+
+<span class="c"># 2. Redis</span>
+C:\laragon\bin\redis\redis-x64-5.0.14.1\redis-cli.exe -p 6379 ping
+<span class="c">#    → "PONG"</span>
+
+<span class="c"># 3. FastAPI</span>
+curl http://127.0.0.1:8000/api/health
+<span class="c">#    → {"status":"ok"}</span>
+
+<span class="c"># 4. Vite</span>
+curl -o NUL -w "%{http_code}" http://127.0.0.1:5173/
+<span class="c">#    → 200</span>
+
+<span class="c"># 5. Celery — must print "celery@HOST ready." and list 5 tasks</span></pre>
+
+<h3>4.2 Where the logs are</h3>
+<table>
+  <tr><th style="width:30%">Source</th><th>Where to look</th></tr>
+  <tr><td>FastAPI</td><td>The uvicorn terminal. Every request logs method, path, status.</td></tr>
+  <tr><td>Celery task failures</td><td>The worker terminal <b>and</b> <code>download_jobs.error_message</code> (also shown in the Jobs page).</td></tr>
+  <tr><td>Playwright login</td><td>Uvicorn terminal (runs in-process). Failures surface via <code>GET /login/{id}/status</code>.</td></tr>
+  <tr><td>Frontend</td><td>Browser DevTools → Console and Network.</td></tr>
+  <tr><td>MySQL</td><td><code>C:\laragon\data\mysql-8\*.err</code></td></tr>
+</table>
+<div class="callout">
+  <b>Persist a log to file</b><br>
+  <code>uvicorn app.main:app &gt; uvicorn.log 2&gt;&amp;1</code> — otherwise output is lost when the terminal closes.
+</div>
+
+<h3>4.3 Failure catalogue — symptom → cause → fix</h3>
+<table>
+  <tr><th style="width:29%">Symptom</th><th style="width:33%">Cause</th><th>Fix</th></tr>
+  <tr>
+    <td>Login screen keeps returning; <code>401</code> on every <code>/api/*</code></td>
+    <td>No/expired <code>imm_session</code> cookie, or <code>SECRET_KEY</code> changed (which invalidates all sessions)</td>
+    <td>Sign in again. If credentials are lost, re-run <code>python -m scripts.create_admin</code></td>
+  </tr>
+  <tr>
+    <td>Job stuck at <code>pending</code> forever</td>
+    <td>Celery worker or Redis is not running</td>
+    <td>Start both. Confirm the worker prints <code>ready</code>.</td>
+  </tr>
+  <tr>
+    <td>Worker says <code>ready</code> but tasks never execute</td>
+    <td>Prefork pool on Windows</td>
+    <td>Restart with <code>--pool=solo</code></td>
+  </tr>
+  <tr>
+    <td><code>"No active Instagram session"</code> in a job error</td>
+    <td>Never connected, session expired, or it was deactivated</td>
+    <td>Instagram Login page → Connect</td>
+  </tr>
+  <tr>
+    <td><code>"Instagram session is no longer valid"</code></td>
+    <td><code>test_login()</code> failed — cookies revoked by Instagram</td>
+    <td>Re-run the browser login</td>
+  </tr>
+  <tr>
+    <td><code>401 … "Please wait a few minutes"</code></td>
+    <td>Instagram rate-limited the account/IP</td>
+    <td><b>Wait.</b> Raise <code>DOWNLOAD_REQUEST_DELAY_SECONDS</code>. Do not retry in a loop.</td>
+  </tr>
+  <tr>
+    <td>Images broken in the library; <code>/files/*</code> returns 401</td>
+    <td>Not signed in — the media mount is auth-gated by middleware</td>
+    <td>Sign in. If it persists, confirm the cookie is being sent.</td>
+  </tr>
+  <tr>
+    <td>Media library grid empty but files exist on disk</td>
+    <td>Rows missing from <code>media_items</code> (job failed mid-way)</td>
+    <td>Check the job's error; re-run with force re-download</td>
+  </tr>
+  <tr>
+    <td>"Download Reels" finds far fewer than expected</td>
+    <td><code>product_type</code> absent from the API response (§3.3)</td>
+    <td>Use "Download All Posts" — reels are included as <code>post_video</code></td>
+  </tr>
+  <tr>
+    <td>Private account returns nothing</td>
+    <td>The authenticated account does not follow it</td>
+    <td>Expected. Access is limited to what the session may legitimately see.</td>
+  </tr>
+  <tr>
+    <td>Vite: <code>crypto$2.getRandomValues is not a function</code></td>
+    <td>Vite 5 requires a newer Node than Laragon's 18.8</td>
+    <td>Stay on Vite 4 (already pinned), or upgrade Node</td>
+  </tr>
+  <tr>
+    <td>Backend won't start: <code>Can't connect to MySQL</code></td>
+    <td>MySQL not running</td>
+    <td>Start it from Laragon</td>
+  </tr>
+  <tr>
+    <td>Alembic: <code>Target database is not up to date</code></td>
+    <td>Migrations not applied</td>
+    <td><code>python -m alembic upgrade head</code></td>
+  </tr>
+</table>
+
+<h3>4.4 Inspecting state with SQL</h3>
+<pre><span class="c">-- Is a session connected, and to whom?</span>
+SELECT ig_username, is_active, updated_at FROM instagram_sessions ORDER BY id DESC;
+
+<span class="c">-- Recent jobs with failures</span>
+SELECT id, job_type, status, progress_current, progress_total,
+       LEFT(error_message,90) AS err, created_at
+FROM download_jobs ORDER BY id DESC LIMIT 20;
+
+<span class="c">-- What actually got downloaded, by type</span>
+SELECT a.username, m.media_type, COUNT(*) AS n, SUM(m.file_size_bytes)/1048576 AS mb
+FROM media_items m JOIN tracked_accounts a ON a.id = m.account_id
+GROUP BY a.username, m.media_type;
+
+<span class="c">-- Rows whose file is referenced but may be missing on disk</span>
+SELECT id, file_path, file_size_bytes FROM media_items WHERE file_size_bytes IS NULL OR file_size_bytes = 0;
+
+<span class="c">-- Confirm no plaintext password is stored</span>
+SELECT username, LEFT(password_hash,7) AS algo, LENGTH(password_hash) AS len FROM admin_users;
+<span class="c">-- expect: $2b$12$ / 60</span></pre>
+
+<h3>4.5 Testing the API directly</h3>
+<p>Bypassing the UI isolates backend from frontend. FastAPI serves interactive docs at <b>http://127.0.0.1:8000/docs</b>; log in through the UI first so the browser holds the cookie, then call endpoints from that page.</p>
+<pre><span class="c"># From the shell — keep a cookie jar</span>
+curl -c c.txt -X POST http://127.0.0.1:8000/api/admin/login \
+     -H "Content-Type: application/json" \
+     -d "{\"username\":\"admin\",\"password\":\"...\"}"
+
+curl -b c.txt http://127.0.0.1:8000/api/accounts
+curl -b c.txt http://127.0.0.1:8000/api/downloads/jobs
+
+<span class="c"># Queue a job without the UI</span>
+curl -b c.txt -X POST http://127.0.0.1:8000/api/downloads/jobs \
+     -H "Content-Type: application/json" \
+     -d "{\"account_id\":1,\"job_type\":\"sync_profile\"}"</pre>
+<div class="callout callout--danger">
+  <b>Delete the cookie jar afterwards</b>
+  <code>c.txt</code> holds a valid 7-day session token. Remove it when finished.
+</div>
+
+<h3>4.6 Frontend debugging</h3>
+<ul>
+  <li><b>Network tab</b> — confirm the request went to <code>/api/...</code> and that <code>imm_session</code> is attached. A <code>401</code> here means auth, not application logic.</li>
+  <li><b>Console</b> — React surfaces key warnings and prop errors here.</li>
+  <li><b>React StrictMode double-invokes effects in development.</b> Seeing two identical requests on mount is expected and does not occur in a production build.</li>
+  <li><b>The cookie is invisible to JavaScript by design.</b> <code>document.cookie</code> returning <code>''</code> is correct — verify the cookie in DevTools → Application → Cookies instead.</li>
+</ul>
+
+<h4>Headless screenshot debugging</h4>
+<p>Playwright is already installed for the login flow and can also drive the UI. This catches rendering and interaction faults that reading code does not:</p>
+<pre><span class="c"># backend\venv\Scripts\python screenshot.py</span>
+from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    b = p.chromium.launch()
+    pg = b.new_page(viewport={"width":1400,"height":950})
+    pg.on("pageerror", lambda e: print("JS ERROR:", e))
+    pg.on("console", lambda m: m.type=="error" and print("CONSOLE:", m.text))
+    pg.goto("http://127.0.0.1:5173/accounts", wait_until="networkidle")
+    pg.fill("#username","admin"); pg.fill("#password","...")
+    pg.click("button[type=submit]"); pg.wait_for_timeout(1500)
+    pg.screenshot(path="out.png", full_page=True)
+    b.close()</pre>
+
+<h3>4.7 Case studies: three real bugs</h3>
+<p>All three passed code review and were only exposed by exercising the running application.</p>
+
+<div class="callout callout--danger">
+  <b>1 — Route collision made the Media Library unreachable</b>
+  The backend mounted static files at <code>/media</code>; the SPA also routed <code>/media</code> to the Media Library page. Vite proxied the path to the backend, which returned <code>{"detail":"Not Found"}</code> instead of rendering the page.<br>
+  <b>Detection:</b> a screenshot showing raw JSON where the page should be.<br>
+  <b>Fix:</b> static mount moved to <code>/files</code>.<br>
+  <b>Lesson:</b> API paths and client-side routes share one namespace once a proxy is involved.
+</div>
+
+<div class="callout callout--danger">
+  <b>2 — Pagination silently reset to page 1</b>
+  <code>updateParam()</code> set the requested key, then unconditionally executed <code>next.set('page','1')</code>. Because page changes flowed through the same helper, every page click was overwritten back to 1.<br>
+  <b>Detection:</b> asserting the info line after clicking page 2 — expected "11 to 12", got "1 to 10".<br>
+  <b>Fix:</b> split into <code>updateFilter()</code> (resets page) and <code>goToPage()</code> (does not).<br>
+  <b>Lesson:</b> one helper serving two intents will eventually serve one of them wrongly.
+</div>
+
+<div class="callout callout--danger">
+  <b>3 — Search ignored visible text</b>
+  The Account cell rendered username <i>and</i> full name, but the column had no <code>value</code> accessor, so the filter only saw <code>row.username</code>. Searching "space" matched <code>spacex</code> but not "European Space Agency".<br>
+  <b>Detection:</b> comparing result count against what was visibly on screen.<br>
+  <b>Fix:</b> <code>value: (r) =&gt; `${r.username} ${r.full_name}`</code>.<br>
+  <b>Lesson:</b> when display and data diverge, search must follow display.
+</div>
+
+<h3>4.8 Reset procedures</h3>
+<pre><span class="c"># Forgot the back-office password</span>
+<span class="c"># edit ADMIN_PASSWORD in backend\.env, then:</span>
+venv\Scripts\python -m scripts.create_admin
+
+<span class="c"># Force a fresh Instagram login</span>
+UPDATE instagram_sessions SET is_active = 0;
+
+<span class="c"># Clear job history (safe — does not touch downloaded media)</span>
+DELETE FROM download_jobs;
+
+<span class="c"># Remove one account and everything it owns (FK cascade)</span>
+DELETE FROM tracked_accounts WHERE username = 'someuser';
+<span class="c"># files under media\someuser\ must be deleted manually</span>
+
+<span class="c"># Rebuild the schema from scratch (DESTROYS ALL DATA)</span>
+DROP DATABASE instagram_media_manager;
+CREATE DATABASE instagram_media_manager CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+<span class="c"># then: alembic upgrade head  &amp;&amp;  python -m scripts.create_admin</span></pre>
+
+<div class="callout callout--warn">
+  <b>Rotating <code>SECRET_KEY</code> has two effects</b>
+  It signs back-office sessions <i>and</i> encrypts the stored Instagram cookies. Changing it logs out every admin session <b>and</b> makes the saved Instagram session undecryptable — a fresh browser login will be required.
+</div>
+</div>
+
+<!-- ================= APPENDIX ================= -->
+<div class="section">
+<h2>5. Appendix — Command Reference</h2>
+
+<h3>Start everything (four terminals)</h3>
+<pre><span class="c">-- 1 --</span> C:\laragon\bin\redis\redis-x64-5.0.14.1\redis-server.exe --port 6379
+
+<span class="c">-- 2 --</span> cd backend
+        venv\Scripts\python -m celery -A app.tasks.celery_app worker --pool=solo --loglevel=info
+
+<span class="c">-- 3 --</span> cd backend
+        venv\Scripts\python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+<span class="c">-- 4 --</span> cd frontend
+        "C:\laragon\bin\nodejs\node-v18\npm.cmd" run dev
+
+<span class="c">MySQL is started from Laragon.  UI: http://localhost:5173</span></pre>
+
+<h3>Database</h3>
+<pre>venv\Scripts\python -m alembic upgrade head                 <span class="c"># apply migrations</span>
+venv\Scripts\python -m alembic revision --autogenerate -m "msg"
+venv\Scripts\python -m alembic current                      <span class="c"># show revision</span>
+venv\Scripts\python -m alembic downgrade -1                 <span class="c"># roll back one</span>
+venv\Scripts\python -m scripts.create_admin                 <span class="c"># seed/reset admin</span></pre>
+
+<h3>Frontend</h3>
+<pre>npm run dev      <span class="c"># dev server, HMR</span>
+npm run build    <span class="c"># production build — run this to catch JSX/import errors</span>
+npm run preview  <span class="c"># serve the built bundle</span></pre>
+
+<h3>Key file locations</h3>
+<table>
+  <tr><th style="width:42%">Path</th><th>Contains</th></tr>
+  <tr><td><code>backend\.env</code></td><td>Secrets. <b>Gitignored.</b> DB URL, SECRET_KEY, admin bootstrap creds</td></tr>
+  <tr><td><code>backend\app\services\instaloader_service.py</code></td><td>All Instagram fetching and file writing</td></tr>
+  <tr><td><code>backend\app\services\instagram_login.py</code></td><td>Playwright login thread</td></tr>
+  <tr><td><code>backend\app\services\security.py</code></td><td>bcrypt, session signing, login throttle</td></tr>
+  <tr><td><code>backend\app\tasks\download_tasks.py</code></td><td>Celery tasks + job status bookkeeping</td></tr>
+  <tr><td><code>frontend\src\styles\tokens.css</code></td><td>Every colour in the application</td></tr>
+  <tr><td><code>frontend\src\components\datatable\DataTable.jsx</code></td><td>The reusable table</td></tr>
+  <tr><td><code>media\</code></td><td>Downloaded originals. <b>Gitignored.</b></td></tr>
+</table>
+
+<h3>Operating boundaries</h3>
+<p>This application deliberately does <b>not</b> implement CAPTCHA solving, 2FA bypass, private-account circumvention, or rate-limit evasion. Access is bounded by what the authenticated Instagram session is legitimately permitted to see. <code>DOWNLOAD_REQUEST_DELAY_SECONDS</code> exists as courtesy throttling; increasing it is the correct response to rate limiting.</p>
+</div>
+
+</body>
+</html>
